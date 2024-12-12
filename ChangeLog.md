@@ -1,1 +1,1 @@
-﻿- Initial release.
+﻿- Fix occasional initialization error.

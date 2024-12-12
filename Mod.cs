@@ -91,6 +91,8 @@ namespace IBLIV
             {
                 LogUtil.Exception(ex);
             }
+
+            LogUtil.Info($"{nameof(Mod)}.{nameof(OnLoad)} complete.");
         }
 
         /// <summary>

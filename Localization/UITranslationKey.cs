@@ -3,20 +3,16 @@ namespace IBLIV
     // Define UI translation keys.
     public class UITranslationKey
     {
-        // Mod title and description.
-        public const string Title                               = "IBLIV.Title";
-        public const string Description                         = "IBLIV.Description";
-
         // Infomode titles.
-        public const string InfomodeTitleLevelResidential       = "Infoviews.INFOMODE[IBLIVLevelResidential]";
-        public const string InfomodeTitleLevelCommercial        = "Infoviews.INFOMODE[IBLIVLevelCommercial]";
-        public const string InfomodeTitleLevelIndustrial        = "Infoviews.INFOMODE[IBLIVLevelIndustrial]";
-        public const string InfomodeTitleLevelOffice            = "Infoviews.INFOMODE[IBLIVLevelOffice]";
+        public const string InfomodeTitleLevelResidential   = "Infoviews.INFOMODE[" + ModAssemblyInfo.Name + "LevelResidential]";
+        public const string InfomodeTitleLevelCommercial    = "Infoviews.INFOMODE[" + ModAssemblyInfo.Name + "LevelCommercial]";
+        public const string InfomodeTitleLevelIndustrial    = "Infoviews.INFOMODE[" + ModAssemblyInfo.Name + "LevelIndustrial]";
+        public const string InfomodeTitleLevelOffice        = "Infoviews.INFOMODE[" + ModAssemblyInfo.Name + "LevelOffice]";
 
         // Infomode tooltips.
-        public const string InfomodeTooltipLevelResidential     = "Infoviews.INFOMODE_TOOLTIP[IBLIVLevelResidential]";
-        public const string InfomodeTooltipLevelCommercial      = "Infoviews.INFOMODE_TOOLTIP[IBLIVLevelCommercial]";
-        public const string InfomodeTooltipLevelIndustrial      = "Infoviews.INFOMODE_TOOLTIP[IBLIVLevelIndustrial]";
-        public const string InfomodeTooltipLevelOffice          = "Infoviews.INFOMODE_TOOLTIP[IBLIVLevelOffice]";
+        public const string InfomodeTooltipLevelResidential = "Infoviews.INFOMODE_TOOLTIP[" + ModAssemblyInfo.Name + "LevelResidential]";
+        public const string InfomodeTooltipLevelCommercial  = "Infoviews.INFOMODE_TOOLTIP[" + ModAssemblyInfo.Name + "LevelCommercial]";
+        public const string InfomodeTooltipLevelIndustrial  = "Infoviews.INFOMODE_TOOLTIP[" + ModAssemblyInfo.Name + "LevelIndustrial]";
+        public const string InfomodeTooltipLevelOffice      = "Infoviews.INFOMODE_TOOLTIP[" + ModAssemblyInfo.Name + "LevelOffice]";
     }
 }

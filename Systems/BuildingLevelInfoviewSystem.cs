@@ -1,4 +1,5 @@
 ﻿using Colossal.Mathematics;
+using Colossal.Serialization.Entities;
 using Game;
 using Game.Prefabs;
 using System;
@@ -14,19 +15,42 @@ namespace IBLIV
     /// </summary>
     public partial class BuildingLevelInfoviewSystem : GameSystemBase
     {
+        // Initialization flag.
+        private bool _initialized = false;
+
         /// <summary>
-        /// Initialize this system.
-        /// All the work of updating the building level infoview is performed in OnCreate().
+        /// Called when a game is about to be loaded.
         /// </summary>
-        protected override void OnCreate()
+        protected override void OnGamePreload(Purpose purpose, GameMode mode)
         {
-            base.OnCreate();
-            LogUtil.Info($"{nameof(BuildingLevelInfoviewSystem)}.{nameof(OnCreate)}");
+            base.OnGamePreload(purpose, mode);
+
+            // Initialization is performed in OnGamePreload instead of OnCreate because
+            // occasionally the signature infomode prefabs were not available when this system was created.
+            // It is not known why this happened only occasionally.
+            
+            // Initialization is performed in OnGamePreload instead of OnGameLoadingComplete because
+            // the custom infoview icon does not get displayed if performed in OnGameLoadingComplete.
+
+            // Skip if already initialized.
+            if (_initialized)
+            {
+                return;
+            }
+
+            // Skip if not loading a game (i.e. is editor or main menu).
+            if (mode != GameMode.Game)
+            {
+                return;
+            }
+
+            LogUtil.Info($"{nameof(BuildingLevelInfoviewSystem)}.{nameof(OnGamePreload)} initialize");
 
             try
             {
                 // The game's infoviews must be created first.
-                // That will be the normal case, but perform the check anyway just in case.
+                // That will be the normal case by the time a game is about to be loaded.
+                // But perform the check anyway just in case.
                 InfoviewInitializeSystem infoviewInitializeSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<InfoviewInitializeSystem>();
                 if (infoviewInitializeSystem == null || infoviewInitializeSystem.infoviews.Count() == 0)
                 {
@@ -50,21 +74,9 @@ namespace IBLIV
                     return;
                 }
 
-                // Create a new building status infomode prefab for the building level of each zone type.
-                BuildingStatusInfomodePrefab infomodePrefabLevelResidential = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelResidential);
-                BuildingStatusInfomodePrefab infomodePrefabLevelCommercial  = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelCommercial);
-                BuildingStatusInfomodePrefab infomodePrefabLevelIndustrial  = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelIndustrial);
-                BuildingStatusInfomodePrefab infomodePrefabLevelOffice      = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelOffice);
-
-                // Add the building status infomode prefabs to the prefab system.
-                PrefabSystem prefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
-                prefabSystem.AddPrefab(infomodePrefabLevelResidential);
-                prefabSystem.AddPrefab(infomodePrefabLevelCommercial);
-                prefabSystem.AddPrefab(infomodePrefabLevelIndustrial);
-                prefabSystem.AddPrefab(infomodePrefabLevelOffice);
-
                 // For signature buildings, the game's existing infomode prefabs are used instead of creating new infomode prefabs.
                 // Get the game's signature infomode prefab for each zone type.
+                PrefabSystem prefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
                 BuildingStatusInfomodePrefab infomodePrefabSignatureResidential = null;
                 BuildingStatusInfomodePrefab infomodePrefabSignatureCommercial  = null;
                 BuildingStatusInfomodePrefab infomodePrefabSignatureIndustrial  = null;
@@ -109,6 +121,18 @@ namespace IBLIV
                 if (infomodePrefabSignatureIndustrial  == null) { LogUtil.Error("Unable to find infomode prefab for Signature Industrial." ); return; }
                 if (infomodePrefabSignatureOffice      == null) { LogUtil.Error("Unable to find infomode prefab for Signature Office."     ); return; }
 
+                // Create a new building status infomode prefab for the building level of each zone type.
+                BuildingStatusInfomodePrefab infomodePrefabLevelResidential = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelResidential);
+                BuildingStatusInfomodePrefab infomodePrefabLevelCommercial  = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelCommercial);
+                BuildingStatusInfomodePrefab infomodePrefabLevelIndustrial  = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelIndustrial);
+                BuildingStatusInfomodePrefab infomodePrefabLevelOffice      = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelOffice);
+
+                // Add the building status infomode prefabs to the prefab system.
+                prefabSystem.AddPrefab(infomodePrefabLevelResidential);
+                prefabSystem.AddPrefab(infomodePrefabLevelCommercial);
+                prefabSystem.AddPrefab(infomodePrefabLevelIndustrial);
+                prefabSystem.AddPrefab(infomodePrefabLevelOffice);
+
                 // Remove the existing infomodes from the building level infoview.
 			    DynamicBuffer<InfoviewMode> infomodesBuildingLevel = prefabSystem.GetBuffer<InfoviewMode>(buildingLevelInfoviewPrafab, isReadOnly: false);
                 infomodesBuildingLevel.Clear();
@@ -126,6 +150,9 @@ namespace IBLIV
 
                 // Set a new custom icon on building level infoview.
                 buildingLevelInfoviewPrafab.m_IconPath = $"coui://{Mod.ImagesURI}/ImprovedBuildingLevel.svg";
+
+                // Initialized.
+                _initialized = true;
             }
             catch (Exception ex)
             {
