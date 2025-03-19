@@ -1,1 +1,1 @@
-﻿- Fix occasional initialization error.
+﻿- Update for game version 1.2.5f1.
