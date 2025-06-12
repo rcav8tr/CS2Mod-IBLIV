@@ -374,78 +374,6 @@ namespace IBLIV
         private EntityQuery _queryTempObject;
         private EntityQuery _queryActiveBuildingStatusData;
 
-        // The component lookup and type handle for color.
-        // These are used to set building color.
-        private ComponentLookup    <Game.Objects.Color          > _componentLookupColor;
-        private ComponentTypeHandle<Game.Objects.Color          > _componentTypeHandleColor;
-
-        // Buffer lookups.
-        private BufferLookup<Renter                             > _bufferLookupRenter;
-
-        // Component lookups.
-        private ComponentLookup<BuildingData                    > _componentLookupBuildingData;
-        private ComponentLookup<BuildingPropertyData            > _componentLookupBuildingPropertyData;
-        private ComponentLookup<SpawnableBuildingData           > _componentLookupSpawnableBuildingData;
-
-        // Component type handles for buildings.
-        // The presence of these on a building defines the building type.
-        private ComponentTypeHandle<CommercialProperty          > _componentTypeHandleCommercialProperty;
-        private ComponentTypeHandle<IndustrialProperty          > _componentTypeHandleIndustrialProperty;
-        private ComponentTypeHandle<OfficeProperty              > _componentTypeHandleOfficeProperty;
-        private ComponentTypeHandle<ResidentialProperty         > _componentTypeHandleResidentialProperty;
-
-        // Component type handles for miscellaneous.
-        private ComponentTypeHandle<Destroyed                   > _componentTypeHandleDestroyed;
-        private ComponentTypeHandle<InfomodeActive              > _componentTypeHandleInfomodeActive;
-        private ComponentTypeHandle<InfoviewBuildingStatusData  > _componentTypeHandleInfoviewBuildingStatusData;
-        private ComponentTypeHandle<PrefabRef                   > _componentTypeHandlePrefabRef;
-        private ComponentTypeHandle<Signature                   > _componentTypeHandleSignature;
-        private ComponentTypeHandle<Temp                        > _componentTypeHandleTemp;
-        private ComponentTypeHandle<UnderConstruction           > _componentTypeHandleUnderConstruction;
-
-        // Entity type handle.
-        private EntityTypeHandle _entityTypeHandle;
-
-        /// <summary>
-        /// Gets called right before OnCreate.
-        /// </summary>
-        protected override void OnCreateForCompiler()
-        {
-            base.OnCreateForCompiler();
-            LogUtil.Info($"{nameof(ObjectColorSystemPatch)}.{nameof(OnCreateForCompiler)}");
-
-            // Assign components for color.
-            // These are the only ones that are read/write.
-            _componentLookupColor                           = CheckedStateRef.GetComponentLookup    <Game.Objects.Color         >();
-            _componentTypeHandleColor                       = CheckedStateRef.GetComponentTypeHandle<Game.Objects.Color         >();
-
-            // Assign buffer lookups.
-            _bufferLookupRenter                             = CheckedStateRef.GetBufferLookup<Renter                            >(true);
-
-            // Assign component lookups.
-            _componentLookupBuildingData                    = CheckedStateRef.GetComponentLookup<BuildingData                   >(true);
-            _componentLookupBuildingPropertyData            = CheckedStateRef.GetComponentLookup<BuildingPropertyData           >(true);
-            _componentLookupSpawnableBuildingData           = CheckedStateRef.GetComponentLookup<SpawnableBuildingData          >(true);
-
-            // Assign component type handles for buildings.
-            _componentTypeHandleCommercialProperty          = CheckedStateRef.GetComponentTypeHandle<CommercialProperty         >(true);
-            _componentTypeHandleIndustrialProperty          = CheckedStateRef.GetComponentTypeHandle<IndustrialProperty         >(true);
-            _componentTypeHandleOfficeProperty              = CheckedStateRef.GetComponentTypeHandle<OfficeProperty             >(true);
-            _componentTypeHandleResidentialProperty         = CheckedStateRef.GetComponentTypeHandle<ResidentialProperty        >(true);
-
-            // Assign component type handles for miscellaneous.
-            _componentTypeHandleDestroyed                   = CheckedStateRef.GetComponentTypeHandle<Destroyed                  >(true);
-            _componentTypeHandleInfomodeActive              = CheckedStateRef.GetComponentTypeHandle<InfomodeActive             >(true);
-            _componentTypeHandleInfoviewBuildingStatusData  = CheckedStateRef.GetComponentTypeHandle<InfoviewBuildingStatusData >(true);
-            _componentTypeHandlePrefabRef                   = CheckedStateRef.GetComponentTypeHandle<PrefabRef                  >(true);
-            _componentTypeHandleSignature                   = CheckedStateRef.GetComponentTypeHandle<Signature                  >(true);
-            _componentTypeHandleTemp                        = CheckedStateRef.GetComponentTypeHandle<Temp                       >(true);
-            _componentTypeHandleUnderConstruction           = CheckedStateRef.GetComponentTypeHandle<UnderConstruction          >(true);
-
-            // Assign entity type handle.
-            _entityTypeHandle                               = CheckedStateRef.GetEntityTypeHandle();
-        }
-
         /// <summary>
         /// Initialize this system.
         /// </summary>
@@ -453,7 +381,7 @@ namespace IBLIV
         protected override void OnCreate()
         {
             base.OnCreate();
-            LogUtil.Info($"{nameof(ObjectColorSystemPatch)}.{nameof(OnCreate)}");
+            Mod.log.Info($"{nameof(ObjectColorSystemPatch)}.{nameof(OnCreate)}");
 
             // Save the game's instance of this system.
             _buildingColorSystem = this;
@@ -556,13 +484,13 @@ namespace IBLIV
             MethodInfo originalMethod = typeof(ObjectColorSystem).GetMethod("OnUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
             if (originalMethod == null)
             {
-                LogUtil.Error($"Unable to find original method {nameof(ObjectColorSystem)}.OnUpdate.");
+                Mod.log.Error($"Unable to find original method {nameof(ObjectColorSystem)}.OnUpdate.");
                 return;
             }
             MethodInfo prefixMethod = typeof(ObjectColorSystemPatch).GetMethod(nameof(OnUpdatePrefix), BindingFlags.Static | BindingFlags.NonPublic);
             if (prefixMethod == null)
             {
-                LogUtil.Error($"Unable to find patch prefix method {nameof(ObjectColorSystemPatch)}.{nameof(OnUpdatePrefix)}.");
+                Mod.log.Error($"Unable to find patch prefix method {nameof(ObjectColorSystemPatch)}.{nameof(OnUpdatePrefix)}.");
                 return;
             }
             new Harmony(Mod.HarmonyID).Patch(originalMethod, new HarmonyMethod(prefixMethod), null);
@@ -608,10 +536,9 @@ namespace IBLIV
 
 
             // Create a job to set default colors.
-            _componentTypeHandleColor.Update(ref CheckedStateRef);
             SetColorsJobDefault setColorsJobDefault = new SetColorsJobDefault()
             {
-                ComponentTypeHandleColor = _componentTypeHandleColor,
+                ComponentTypeHandleColor = SystemAPI.GetComponentTypeHandle<Game.Objects.Color>(false),
             };
 
 
@@ -619,67 +546,41 @@ namespace IBLIV
             NativeList<ArchetypeChunk> activeBuildingStatusDataChunks =
                 _queryActiveBuildingStatusData.ToArchetypeChunkListAsync(Allocator.TempJob, out JobHandle activeBuildingStatusDataJobHandle);
 
-            // Update buffers and components for zone building colors job.
-            _componentTypeHandleColor                       .Update(ref CheckedStateRef);
-
-            _bufferLookupRenter                             .Update(ref CheckedStateRef);
-
-            _componentLookupBuildingData                    .Update(ref CheckedStateRef);
-            _componentLookupBuildingPropertyData            .Update(ref CheckedStateRef);
-            _componentLookupSpawnableBuildingData           .Update(ref CheckedStateRef);
-
-            _componentTypeHandleCommercialProperty          .Update(ref CheckedStateRef);
-            _componentTypeHandleIndustrialProperty          .Update(ref CheckedStateRef);
-            _componentTypeHandleOfficeProperty              .Update(ref CheckedStateRef);
-            _componentTypeHandleResidentialProperty         .Update(ref CheckedStateRef);
-
-            _componentTypeHandleDestroyed                   .Update(ref CheckedStateRef);
-            _componentTypeHandleInfomodeActive              .Update(ref CheckedStateRef);
-            _componentTypeHandleInfoviewBuildingStatusData  .Update(ref CheckedStateRef);
-            _componentTypeHandlePrefabRef                   .Update(ref CheckedStateRef);
-            _componentTypeHandleSignature                   .Update(ref CheckedStateRef);
-            _componentTypeHandleUnderConstruction           .Update(ref CheckedStateRef);
-
-            _entityTypeHandle                               .Update(ref CheckedStateRef);
-
             // Create a job to set zone building colors.
             SetColorsJobZoneBuilding setColorsJobZoneBuilding = new SetColorsJobZoneBuilding()
             {
-                ComponentTypeHandleColor                        = _componentTypeHandleColor,
+                ComponentTypeHandleColor                        = SystemAPI.GetComponentTypeHandle<Game.Objects.Color>(false),
 
-                BufferLookupRenter                              = _bufferLookupRenter,
+                BufferLookupRenter                              = SystemAPI.GetBufferLookup<Renter                              >(true),
                 
-                ComponentLookupBuildingData                     = _componentLookupBuildingData,
-                ComponentLookupBuildingPropertyData             = _componentLookupBuildingPropertyData,
-                ComponentLookupSpawnableBuildingData            = _componentLookupSpawnableBuildingData,
+                ComponentLookupBuildingData                     = SystemAPI.GetComponentLookup<BuildingData                     >(true),
+                ComponentLookupBuildingPropertyData             = SystemAPI.GetComponentLookup<BuildingPropertyData             >(true),
+                ComponentLookupSpawnableBuildingData            = SystemAPI.GetComponentLookup<SpawnableBuildingData            >(true),
                 
-                ComponentTypeHandleCommercialProperty           = _componentTypeHandleCommercialProperty,
-                ComponentTypeHandleIndustrialProperty           = _componentTypeHandleIndustrialProperty,
-                ComponentTypeHandleOfficeProperty               = _componentTypeHandleOfficeProperty,
-                ComponentTypeHandleResidentialProperty          = _componentTypeHandleResidentialProperty,
+                ComponentTypeHandleCommercialProperty           = SystemAPI.GetComponentTypeHandle<CommercialProperty           >(true),
+                ComponentTypeHandleIndustrialProperty           = SystemAPI.GetComponentTypeHandle<IndustrialProperty           >(true),
+                ComponentTypeHandleOfficeProperty               = SystemAPI.GetComponentTypeHandle<OfficeProperty               >(true),
+                ComponentTypeHandleResidentialProperty          = SystemAPI.GetComponentTypeHandle<ResidentialProperty          >(true),
 
-                ComponentTypeHandleDestroyed                    = _componentTypeHandleDestroyed,
-                ComponentTypeHandleInfomodeActive               = _componentTypeHandleInfomodeActive,
-                ComponentTypeHandleInfoviewBuildingStatusData   = _componentTypeHandleInfoviewBuildingStatusData,
-                ComponentTypeHandlePrefabRef                    = _componentTypeHandlePrefabRef,
-                ComponentTypeHandleSignature                    = _componentTypeHandleSignature,
-                ComponentTypeHandleUnderConstruction            = _componentTypeHandleUnderConstruction,
+                ComponentTypeHandleDestroyed                    = SystemAPI.GetComponentTypeHandle<Destroyed                    >(true),
+                ComponentTypeHandleInfomodeActive               = SystemAPI.GetComponentTypeHandle<InfomodeActive               >(true),
+                ComponentTypeHandleInfoviewBuildingStatusData   = SystemAPI.GetComponentTypeHandle<InfoviewBuildingStatusData   >(true),
+                ComponentTypeHandlePrefabRef                    = SystemAPI.GetComponentTypeHandle<PrefabRef                    >(true),
+                ComponentTypeHandleSignature                    = SystemAPI.GetComponentTypeHandle<Signature                    >(true),
+                ComponentTypeHandleUnderConstruction            = SystemAPI.GetComponentTypeHandle<UnderConstruction            >(true),
                 
-                EntityTypeHandle                                = _entityTypeHandle,
+                EntityTypeHandle                                = SystemAPI.GetEntityTypeHandle(),
 
                 ActiveBuildingStatusDataChunks                  = activeBuildingStatusDataChunks,
             };
 
 
             // Create a job to set temp object colors.
-            _componentLookupColor       .Update(ref CheckedStateRef);
-            _componentTypeHandleTemp    .Update(ref CheckedStateRef);
-            _entityTypeHandle           .Update(ref CheckedStateRef);
             SetColorsJobTempObject setColorsJobTempObject = new SetColorsJobTempObject()
             {
-                ComponentLookupColor    = _componentLookupColor,
-                ComponentTypeHandleTemp = _componentTypeHandleTemp,
-                EntityTypeHandle        = _entityTypeHandle,
+                ComponentLookupColor    = SystemAPI.GetComponentLookup<Game.Objects.Color>(false),
+                ComponentTypeHandleTemp = SystemAPI.GetComponentTypeHandle<Temp>(true),
+                EntityTypeHandle        = SystemAPI.GetEntityTypeHandle(),
             };
 
 

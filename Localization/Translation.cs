@@ -118,7 +118,7 @@ namespace IBLIV
         {
             try
             {
-                LogUtil.Info($"{nameof(Translation)}.{nameof(Initialize)}");
+                Mod.log.Info($"{nameof(Translation)}.{nameof(Initialize)}");
 
                 // Translation keys are the constant names (not values) from UITranslationKey.
                 FieldInfo[] fields = typeof(UITranslationKey).GetFields();
@@ -136,7 +136,7 @@ namespace IBLIV
                 const string translationFile = ModAssemblyInfo.Name + ".Localization.Translation.csv";
                 if (!Assembly.GetExecutingAssembly().GetManifestResourceNames().Contains(translationFile))
                 {
-                    LogUtil.Error($"Translation file [{translationFile}] does not exist in the assembly.");
+                    Mod.log.Error($"Translation file [{translationFile}] does not exist in the assembly.");
                     return;
                 }
 
@@ -157,7 +157,7 @@ namespace IBLIV
                 string firstLine = lines[0];
                 if (firstLine.Trim().Length == 0 || firstLine.StartsWith("#"))
                 {
-                    LogUtil.Error("Translation file first line is blank or comment. Expecting language codes on the first line.");
+                    Mod.log.Error("Translation file first line is blank or comment. Expecting language codes on the first line.");
                     return;
                 }
 
@@ -204,7 +204,7 @@ namespace IBLIV
                 {
                     if (translationKeyCount[translationkey] == 0)
                     {
-                        LogUtil.Warn($"Translation key [{translationkey}] is not defined in the translation file.");
+                        Mod.log.Warn($"Translation key [{translationkey}] is not defined in the translation file.");
                     }
                 }
 
@@ -217,7 +217,7 @@ namespace IBLIV
             }
             catch(Exception ex)
             {
-                LogUtil.Exception(ex);
+                Mod.log.Error(ex);
             }
         }
 
@@ -260,7 +260,7 @@ namespace IBLIV
                     // Check that the first language code in the file is the default language code.
                     if (firstLanguageCode && languageCode != DefaultLanguageCode)
                     {
-                        LogUtil.Warn($"Translation file must have default language code [{DefaultLanguageCode}] defined first.");
+                        Mod.log.Warn($"Translation file must have default language code [{DefaultLanguageCode}] defined first.");
                     }
 
                     // Get next language code.
@@ -274,7 +274,7 @@ namespace IBLIV
             {
                 if (languageCodeCount[languageCode] != 1)
                 {
-                    LogUtil.Warn($"Translation file defines language code [{languageCode}] {languageCodeCount[languageCode]} times.  Expecting 1 time.");
+                    Mod.log.Warn($"Translation file defines language code [{languageCode}] {languageCodeCount[languageCode]} times.  Expecting 1 time.");
                 }
             }
         }
@@ -335,7 +335,7 @@ namespace IBLIV
                     else
                     {
                         // Skip this invalid translation key.
-                        LogUtil.Warn($"Translation file contains translation key [{translationKey}] which is not defined in the mod.");
+                        Mod.log.Warn($"Translation file contains translation key [{translationKey}] which is not defined in the mod.");
                         return;
                     }
                 }
@@ -353,7 +353,7 @@ namespace IBLIV
                         if (languageCode == DefaultLanguageCode)
                         {
                             // For default language, warn and use the key as the translated text.
-                            LogUtil.Warn($"Translation for key [{translationKey}] must be defined for default language code [{DefaultLanguageCode}].");
+                            Mod.log.Warn($"Translation for key [{translationKey}] must be defined for default language code [{DefaultLanguageCode}].");
                             translatedText = translationKey;
                         }
                         else
@@ -390,13 +390,13 @@ namespace IBLIV
                             }
                             else
                             {
-                                LogUtil.Warn($"Game translation key [{gameTranslationKey}] does not exist for language [{languageCode}].");
+                                Mod.log.Warn($"Game translation key [{gameTranslationKey}] does not exist for language [{languageCode}].");
                                 // Leave the invalid $$ reference in the translated text.
                             }
                         }
                         else
                         {
-                            LogUtil.Warn($"Game does not contain translations for language [{languageCode}] for translation key [{gameTranslationKey}].");
+                            Mod.log.Warn($"Game does not contain translations for language [{languageCode}] for translation key [{gameTranslationKey}].");
                             // Leave the invalid $$ reference in the translated text.
                         }
                     }
@@ -423,7 +423,7 @@ namespace IBLIV
                         // Check for invalid @@ reference (i.e. an "@@" reference was not replaced above).
                         if (translatedText.Contains("@@"))
                         {
-                            LogUtil.Warn($"Translation for key [{translationKey}] for language [{languageCode}] has an invalid @@ reference.");
+                            Mod.log.Warn($"Translation for key [{translationKey}] for language [{languageCode}] has an invalid @@ reference.");
                             // Leave the invalid @@ reference in the translated text.
                         }
                     }

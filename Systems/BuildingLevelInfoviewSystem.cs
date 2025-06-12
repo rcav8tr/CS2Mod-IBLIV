@@ -44,7 +44,7 @@ namespace IBLIV
                 return;
             }
 
-            LogUtil.Info($"{nameof(BuildingLevelInfoviewSystem)}.{nameof(OnGamePreload)} initialize");
+            Mod.log.Info($"{nameof(BuildingLevelInfoviewSystem)}.{nameof(OnGamePreload)} initialize");
 
             try
             {
@@ -54,7 +54,7 @@ namespace IBLIV
                 InfoviewInitializeSystem infoviewInitializeSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<InfoviewInitializeSystem>();
                 if (infoviewInitializeSystem == null || infoviewInitializeSystem.infoviews.Count() == 0)
                 {
-                    LogUtil.Error("The game's infoviews must be created.");
+                    Mod.log.Error("The game's infoviews must be created.");
                     return;
                 }
 
@@ -70,7 +70,7 @@ namespace IBLIV
                 }
                 if (buildingLevelInfoviewPrafab == null)
                 { 
-                    LogUtil.Error("Unable to find the Building Level infoview prefab.");
+                    Mod.log.Error("Unable to find the Building Level infoview prefab.");
                     return;
                 }
 
@@ -116,10 +116,10 @@ namespace IBLIV
                 }
 
                 // Verify signature infomode prefabs.
-                if (infomodePrefabSignatureResidential == null) { LogUtil.Error("Unable to find infomode prefab for Signature Residential."); return; }
-                if (infomodePrefabSignatureCommercial  == null) { LogUtil.Error("Unable to find infomode prefab for Signature Commercial." ); return; }
-                if (infomodePrefabSignatureIndustrial  == null) { LogUtil.Error("Unable to find infomode prefab for Signature Industrial." ); return; }
-                if (infomodePrefabSignatureOffice      == null) { LogUtil.Error("Unable to find infomode prefab for Signature Office."     ); return; }
+                if (infomodePrefabSignatureResidential == null) { Mod.log.Error("Unable to find infomode prefab for Signature Residential."); return; }
+                if (infomodePrefabSignatureCommercial  == null) { Mod.log.Error("Unable to find infomode prefab for Signature Commercial." ); return; }
+                if (infomodePrefabSignatureIndustrial  == null) { Mod.log.Error("Unable to find infomode prefab for Signature Industrial." ); return; }
+                if (infomodePrefabSignatureOffice      == null) { Mod.log.Error("Unable to find infomode prefab for Signature Office."     ); return; }
 
                 // Create a new building status infomode prefab for the building level of each zone type.
                 BuildingStatusInfomodePrefab infomodePrefabLevelResidential = CreateInfomodePrefab(ImprovedBuildingStatusType.LevelResidential);
@@ -156,7 +156,7 @@ namespace IBLIV
             }
             catch (Exception ex)
             {
-                LogUtil.Exception(ex);
+                Mod.log.Error(ex);
             }
         }
 

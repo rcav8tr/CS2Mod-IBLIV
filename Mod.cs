@@ -1,4 +1,5 @@
 ﻿using Colossal.IO.AssetDatabase;
+using Colossal.Logging;
 using Colossal.UI;
 using Game;
 using Game.Modding;
@@ -14,6 +15,12 @@ namespace IBLIV
     /// </summary>
     public class Mod : IMod
     {
+        // Create a new log just for this mod.
+        // This mod will have its own log file in the game's Logs folder.
+        public static readonly ILog log = LogManager.GetLogger(ModAssemblyInfo.Name)
+            .SetShowsErrorsInUI(true)                       // Show message in UI for severity level Error and above.
+            .SetShowsStackTraceAboveLevels(Level.Error);    // Include stack trace for severity level Error and above.
+
         // URI for UI images.
         // When the URI is used to access an image, the game forces the URI portion to lower case.
         // So make the URI lower case here to be compatible.
@@ -27,7 +34,7 @@ namespace IBLIV
         /// </summary>
         public void OnLoad(UpdateSystem updateSystem)
         {
-            LogUtil.Info($"{nameof(Mod)}.{nameof(OnLoad)}");
+            log.Info($"{nameof(Mod)}.{nameof(OnLoad)}");
 
             try
             {
@@ -37,7 +44,7 @@ namespace IBLIV
                 // Add mod UI images directory to UI resource handler.
                 if (!GameManager.instance.modManager.TryGetExecutableAsset(this, out ExecutableAsset modExecutableAsset))
                 {
-                    LogUtil.Error("Unable to get mod executable asset.");
+                    log.Error("Unable to get mod executable asset.");
                     return;
                 }
                 string assemblyPath = Path.GetDirectoryName(modExecutableAsset.path);
@@ -65,7 +72,7 @@ namespace IBLIV
                 //        //if (keyValue.Value.ToLower() == "residential")
                 //        //if (keyValue.Value.ToLower().StartsWith("higher level office buildings"))
                 //        {
-                //            LogUtil.Info(keyValue.Key + "\t" + keyValue.Value);
+                //            log.Info(keyValue.Key + "\t" + keyValue.Value);
                 //        }
                 //    }
                 //}
@@ -79,7 +86,7 @@ namespace IBLIV
                 //    {
                 //        if (keyValue.Key == "SelectedInfoPanel.TOOLTIP[LevelSectionResidential]")
                 //        {
-                //            LogUtil.Info(keyValue.Key + "\t" + localeID + "\t" + keyValue.Value);
+                //            log.Info(keyValue.Key + "\t" + localeID + "\t" + keyValue.Value);
                 //            break;
                 //        }
                 //    }
@@ -89,10 +96,10 @@ namespace IBLIV
             }
             catch (Exception ex)
             {
-                LogUtil.Exception(ex);
+                log.Error(ex);
             }
 
-            LogUtil.Info($"{nameof(Mod)}.{nameof(OnLoad)} complete.");
+            log.Info($"{nameof(Mod)}.{nameof(OnLoad)} complete.");
         }
 
         /// <summary>
@@ -100,7 +107,7 @@ namespace IBLIV
         /// </summary>
         public void OnDispose()
         {
-            LogUtil.Info($"{nameof(Mod)}.{nameof(OnDispose)}");
+            log.Info($"{nameof(Mod)}.{nameof(OnDispose)}");
         }
     }
 }

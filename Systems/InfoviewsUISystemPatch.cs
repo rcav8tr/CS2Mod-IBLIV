@@ -27,7 +27,7 @@ namespace IBLIV
         protected override void OnCreate()
         {
             base.OnCreate();
-            LogUtil.Info($"{nameof(InfoviewsUISystemPatch)}.{nameof(OnCreate)}");
+            Mod.log.Info($"{nameof(InfoviewsUISystemPatch)}.{nameof(OnCreate)}");
 
             // Save the game's instance of this system.
             _infoviewsUISystemPatch = this;
@@ -36,13 +36,13 @@ namespace IBLIV
             MethodInfo originalMethod = typeof(InfoviewsUISystem).GetMethod("BindInfomodeGradientLegend", BindingFlags.Instance | BindingFlags.NonPublic);
             if (originalMethod == null)
             {
-                LogUtil.Error($"Unable to find original method {nameof(InfoviewsUISystem)}.BindInfomodeGradientLegend.");
+                Mod.log.Error($"Unable to find original method {nameof(InfoviewsUISystem)}.BindInfomodeGradientLegend.");
                 return;
             }
             MethodInfo prefixMethod = typeof(InfoviewsUISystemPatch).GetMethod(nameof(BindInfomodeGradientLegendPrefix), BindingFlags.Static | BindingFlags.NonPublic);
             if (prefixMethod == null)
             {
-                LogUtil.Error($"Unable to find patch prefix method {nameof(InfoviewsUISystemPatch)}.{nameof(BindInfomodeGradientLegendPrefix)}.");
+                Mod.log.Error($"Unable to find patch prefix method {nameof(InfoviewsUISystemPatch)}.{nameof(BindInfomodeGradientLegendPrefix)}.");
                 return;
             }
             new Harmony(Mod.HarmonyID).Patch(originalMethod, new HarmonyMethod(prefixMethod), null);
