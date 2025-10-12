@@ -10,7 +10,7 @@ namespace IBLIV
     public class ModAssemblyInfo
     {
         public const string Name        = "IBLIV";
-        public const string Version     = "1.0.3";
+        public const string Version     = "1.0.4";
         public const string Title       = "Improved Building Level Info View";
         public const string Description = "Improvements to the Building Level info view.";
     }

@@ -1,1 +1,1 @@
-﻿- Code cleanup.
+﻿- Improve localization handling.

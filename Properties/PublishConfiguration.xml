@@ -31,6 +31,8 @@ However, this mod is likely to conflict with any other mod that also modifies th
 
 This mod can be safely disabled or unsubscribed at any time.
 
+To receive an invitation to the Discord server for mod discussion, go to:  [https://discord.gg/HTav7ARPs2](https://discord.gg/HTav7ARPs2)
+
 # Acknowledgements
 The following mods were used extensively in the development of this mod:
 - Scene Explorer by krzychu124
@@ -53,19 +55,20 @@ The following mods were used extensively in the development of this mod:
     <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/improved-building-level-info-view.1718627/" />
 
     <!-- Version of the mod.  Copied from assembly Version. -->
-    <ModVersion Value="1.0.3" />
+    <ModVersion Value="1.0.4" />
 
     <!-- Recommended version of the base game to use the mod. -->
-    <GameVersion Value="1.*" />
+    <GameVersion Value="1.3.*" />
 
     <!-- Dependency for the mod.  Can be set multiple times. -->
     <Dependency Id="" />
 
     <!-- Change log.  Copied from ChangeLog.md file.  Supports minimal markdown subset. -->
     <ChangeLog>
-- Code cleanup.
+- Improve localization handling.
 </ChangeLog>
 
     <!-- External links. Supported types are discord, github, youtube, twitch, x, paypal, patreon, buymeacoffee, kofi, crowdin, gitlab.  Can be set multiple times. -->
     <ExternalLink Type="github" Url="https://github.com/rcav8tr/CS2Mod-IBLIV" />
+    <ExternalLink Type="discord" Url="https://discord.com/channels/1024242828114673724/1427013834819895477/1427013834819895477" />
 </Publish>

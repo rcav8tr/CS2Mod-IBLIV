@@ -2,25 +2,17 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net472</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
 		
 		<!--The file where mod information which is required for publishing mod on PDX mods are stored-->
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 		<Title>Improved Building Level Info View</Title>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<Description>Improvements to the Building Level info view.</Description>
-		<Copyright>Copyright © 2024-2025</Copyright>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <Copyright>Copyright © 2024-2025</Copyright>
         <PDXAccountDataPath>$(USERPROFILE)\Documents\Visual Studio Projects\Cities Skylines 2 Mods\My Mods\pdx_account.txt</PDXAccountDataPath>
     </PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-	</PropertyGroup>
 	
 	<!--Imports must be after PropertyGroup block-->
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />

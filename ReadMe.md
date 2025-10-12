@@ -15,6 +15,8 @@ However, this mod is likely to conflict with any other mod that also modifies th
 
 This mod can be safely disabled or unsubscribed at any time.
 
+To receive an invitation to the Discord server for mod discussion, go to:  [https://discord.gg/HTav7ARPs2](https://discord.gg/HTav7ARPs2)
+
 # Acknowledgements
 The following mods were used extensively in the development of this mod:
 - Scene Explorer by krzychu124
