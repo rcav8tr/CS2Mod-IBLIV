@@ -34,7 +34,7 @@ namespace IBLIV
         /// </summary>
         public void OnLoad(UpdateSystem updateSystem)
         {
-            log.Info($"{nameof(Mod)}.{nameof(OnLoad)}");
+            log.Info($"{nameof(Mod)}.{nameof(OnLoad)} Version {ModAssemblyInfo.Version}");
 
             try
             {
