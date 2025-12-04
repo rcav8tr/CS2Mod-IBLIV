@@ -1,1 +1,1 @@
-﻿- Improve localization handling.
+﻿- Update for game version 1.5.2.

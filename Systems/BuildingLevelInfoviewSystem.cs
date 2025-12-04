@@ -62,7 +62,7 @@ namespace IBLIV
                 InfoviewPrefab buildingLevelInfoviewPrafab = null;
                 foreach (InfoviewPrefab infoviewPrefab in infoviewInitializeSystem.infoviews)
                 {
-                    if (infoviewPrefab.builtin && infoviewPrefab.name == "Level")
+                    if (infoviewPrefab.isBuiltin && infoviewPrefab.name == "Level")
                     { 
                         buildingLevelInfoviewPrafab = infoviewPrefab;
                         break;
