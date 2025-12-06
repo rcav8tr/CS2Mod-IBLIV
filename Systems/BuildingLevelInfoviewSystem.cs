@@ -133,8 +133,21 @@ namespace IBLIV
                 prefabSystem.AddPrefab(infomodePrefabLevelIndustrial);
                 prefabSystem.AddPrefab(infomodePrefabLevelOffice);
 
-                // Remove the existing infomodes from the building level infoview.
+                // Get the existing infomodes from the building level infoview.
 			    DynamicBuffer<InfoviewMode> infomodesBuildingLevel = prefabSystem.GetBuffer<InfoviewMode>(buildingLevelInfoviewPrafab, isReadOnly: false);
+
+                // Find and save the infomode for the leveling up resources delivery vehicles.
+                Entity levelingUpVehicles = Entity.Null;
+                foreach (InfoviewMode infoviewMode in infomodesBuildingLevel)
+                {
+                    if (EntityManager.HasComponent<InfoviewVehicleData>(infoviewMode.m_Mode))
+                    {
+                        levelingUpVehicles = infoviewMode.m_Mode;
+                        break;
+                    }
+                }
+
+                // Remove the existing infomodes from the building level infoview.
                 infomodesBuildingLevel.Clear();
 
                 // Add the infomode prefabs to the building level infoview.
@@ -147,6 +160,12 @@ namespace IBLIV
                 infomodesBuildingLevel.Add(new InfoviewMode(prefabSystem.GetEntity(infomodePrefabSignatureCommercial ), priority++, false, false));
                 infomodesBuildingLevel.Add(new InfoviewMode(prefabSystem.GetEntity(infomodePrefabSignatureIndustrial ), priority++, false, false));
                 infomodesBuildingLevel.Add(new InfoviewMode(prefabSystem.GetEntity(infomodePrefabSignatureOffice     ), priority++, false, false));
+
+                // Restore the leveling up resources delivery vehicles infomode to the end of the building level infoview.
+                if (levelingUpVehicles != Entity.Null)
+                {
+                    infomodesBuildingLevel.Add(new InfoviewMode(levelingUpVehicles, priority++, false, false));
+                }
 
                 // Set a new custom icon on building level infoview.
                 buildingLevelInfoviewPrafab.m_IconPath = $"coui://{Mod.ImagesURI}/ImprovedBuildingLevel.svg";

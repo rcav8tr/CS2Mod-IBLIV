@@ -1,1 +1,2 @@
-﻿- Update for game version 1.5.2.
+﻿- Include leveling up resources delivery vehicles.
+- Update icon.

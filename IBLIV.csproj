@@ -7,11 +7,10 @@
 		<!--The file where mod information which is required for publishing mod on PDX mods are stored-->
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 		<Title>Improved Building Level Info View</Title>
-		<Version>1.0.5</Version>
+		<Version>1.0.6</Version>
 		<Description>Improvements to the Building Level info view.</Description>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <Copyright>Copyright © 2024-2025</Copyright>
-        <PDXAccountDataPath>$(USERPROFILE)\Documents\Visual Studio Projects\Cities Skylines 2 Mods\My Mods\pdx_account.txt</PDXAccountDataPath>
     </PropertyGroup>
 	
 	<!--Imports must be after PropertyGroup block-->

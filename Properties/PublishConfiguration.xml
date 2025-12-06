@@ -55,7 +55,7 @@ The following mods were used extensively in the development of this mod:
     <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/improved-building-level-info-view.1718627/" />
 
     <!-- Version of the mod.  Copied from assembly Version. -->
-    <ModVersion Value="1.0.5" />
+    <ModVersion Value="1.0.6" />
 
     <!-- Recommended version of the base game to use the mod. -->
     <GameVersion Value="1.5.2*" />
@@ -65,7 +65,8 @@ The following mods were used extensively in the development of this mod:
 
     <!-- Change log.  Copied from ChangeLog.md file.  Supports minimal markdown subset. -->
     <ChangeLog>
-- Update for game version 1.5.2.
+- Include leveling up resources delivery vehicles.
+- Update icon.
 </ChangeLog>
 
     <!-- External links. Supported types are discord, github, youtube, twitch, x, paypal, patreon, buymeacoffee, kofi, crowdin, gitlab.  Can be set multiple times. -->
