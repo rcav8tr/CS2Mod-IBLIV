@@ -1,2 +1,1 @@
-﻿- Include leveling up resources delivery vehicles.
-- Update icon.
+﻿- Update for game version 1.5.7.
